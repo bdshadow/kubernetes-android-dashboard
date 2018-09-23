@@ -23,11 +23,12 @@ android {
     }
 }
 
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module("com.google.guava:guava:25.1-jre") with module("com.google.guava:guava:25.1-android")
-    }
-}
+//configurations.all {
+//    resolutionStrategy.dependencySubstitution {
+//        substitute module("com.google.guava:guava:25.1-jre") with module("com.google.guava:guava:25.1-android")
+//
+//    }
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -35,12 +36,11 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:design:27.1.1'
 
-    implementation 'io.kubernetes:client-java-api:2.0.0'
-    //implementation 'io.kubernetes:client-java:2.0.0'
-    //implementation 'io.kubernetes:client-java-proto:2.0.0'
-//    implementation('com.google.guava:guava:22.0-android') {
-//        force = true
-//    }
+    implementation('io.kubernetes:client-java:2.0.0') {
+        transitive = false
+    }
+
+    runtimeOnly 'com.google.guava:guava:25.1-android'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

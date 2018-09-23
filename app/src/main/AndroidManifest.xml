@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewKubernetesConnectionActivity"
+            android:name=".NewKubernetesConnectionFragment"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
