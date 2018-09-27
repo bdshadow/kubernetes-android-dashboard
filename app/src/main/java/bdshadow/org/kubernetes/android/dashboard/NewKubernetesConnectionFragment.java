@@ -3,15 +3,13 @@ package bdshadow.org.kubernetes.android.dashboard;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.util.Config;
 
 public class NewKubernetesConnectionFragment extends Fragment {
 
@@ -40,7 +38,16 @@ public class NewKubernetesConnectionFragment extends Fragment {
                 }
             }
         });
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return fragementView;
+    }
+
+    @Override
+    public void onResume() {
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.setTitle("New connection");
+        super.onResume();
     }
 
     public ApiClient getClient() {
