@@ -9,11 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
-import io.kubernetes.client.ApiClient;
-
 public class NewKubernetesConnectionFragment extends Fragment {
-
-    private ApiClient client;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,10 +44,6 @@ public class NewKubernetesConnectionFragment extends Fragment {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.setTitle("New connection");
         super.onResume();
-    }
-
-    public ApiClient getClient() {
-        return client;
     }
 
 }
