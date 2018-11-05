@@ -14,13 +14,18 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     packagingOptions {
         exclude 'org/bouncycastle/x509/CertPathReviewerMessages_de.properties'
         exclude 'org/bouncycastle/x509/CertPathReviewerMessages.properties'
+        exclude 'io/sundr/builder/*.java'
     }
 }
 
@@ -41,25 +46,18 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
 
-    //implementation('io.kubernetes:client-java-api:2.0.0')
-    //implementation('io.kubernetes:client-java:2.0.0') {
-        //transitive = false
-        //exclude group: 'io.kubernetes', module: 'client-java-api'
-    //}
-    //compileOnly('io.kubernetes:client-java-api:2.0.0')
-    //implementation('io.kubernetes:client-java-util:2.0.0')
+    implementation('com.github.bdshadow:kubernetes-client-java:17222a2711')
 
-    // io.kubernetes:client-java dependencies
-    implementation 'io.swagger:swagger-annotations:1.5.8'
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
-    implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
-    implementation 'com.google.code.gson:gson:2.6.2'
-    implementation 'joda-time:joda-time:2.9.3'
-    implementation 'org.joda:joda-convert:1.2'
-    //implementation 'io.sundr:builder-annotations:0.8.0'
-    implementation 'org.apache.commons:commons-lang3:3.7'
+//    implementation 'io.swagger:swagger-annotations:1.5.8'
+//    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+//    implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
+//    implementation 'com.google.code.gson:gson:2.6.2'
+//    implementation 'joda-time:joda-time:2.9.3'
+//    implementation 'org.joda:joda-convert:1.2'
+//    //implementation 'io.sundr:builder-annotations:0.8.0'
+//    implementation 'org.apache.commons:commons-lang3:3.7'
 
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+//    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     runtimeOnly 'com.google.guava:guava:25.1-android'
 
     testImplementation 'junit:junit:4.12'
