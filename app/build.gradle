@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "bdshadow.org.kubernetes.android.dashboard"
-        minSdkVersion 19
+        minSdkVersion 22
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -46,7 +46,8 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
 
-    implementation('com.github.bdshadow:kubernetes-client-java:17222a2711')
+    implementation 'com.github.bdshadow.kubernetes-client-android:kubernetes-client:9682a487f2'
+    //implementation 'com.github.bdshadow.kubernetes-client-android:kubernetes-model:9682a487f2'
 
 //    implementation 'io.swagger:swagger-annotations:1.5.8'
 //    implementation 'com.squareup.okhttp:okhttp:2.7.5'

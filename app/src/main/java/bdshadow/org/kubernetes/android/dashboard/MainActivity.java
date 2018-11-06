@@ -7,20 +7,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 
 import java.util.concurrent.ExecutionException;
 
-import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.ApiException;
-import io.kubernetes.client.Configuration;
-import io.kubernetes.client.apis.CoreV1Api;
-import io.kubernetes.client.models.V1Pod;
-import io.kubernetes.client.models.V1PodList;
-import io.kubernetes.client.util.Config;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,33 +59,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNewConnectionClick(View view) throws ExecutionException, InterruptedException {
-        final String url = ((android.widget.EditText)this.newConnectionFragment.getView().findViewById(R.id.editTextServerUrl)).getText().toString();
+        final String url = ((android.widget.EditText) this.newConnectionFragment.getView().findViewById(R.id.editTextServerUrl)).getText().toString();
         RadioGroup radioGroupAuth = this.newConnectionFragment.getView().findViewById(R.id.radioGroupAuthType);
         if (radioGroupAuth.getCheckedRadioButtonId() == R.id.radioOAuth) {
-            final String token = ((android.widget.EditText)this.newConnectionFragment.getView().findViewById(R.id.editTextToken)).getText().toString();
-            new AsyncTask() {
-
-                @Override
-                protected Object doInBackground(Object[] objects) {
-                    try {
-                        ApiClient client = Config.fromToken(url, token);
-                        Configuration.setDefaultApiClient(client);
-                        CoreV1Api api = new CoreV1Api();
-                        V1PodList list = api.listNamespacedPod("myproject4", null, null, null, null, null, null, null, null, null);
-                        for (V1Pod item : list.getItems()) {
-                            System.out.println(item.getMetadata().getName());
-                        }
-                    } catch (ApiException e) {
-                        Log.e("MainActivity", "Error", e);
-                    }
-                    return new Object();
-                }
-            }.execute().get();
+            final String token = ((android.widget.EditText) this.newConnectionFragment.getView().findViewById(R.id.editTextToken)).getText().toString();
+            try {
+                new MyTask().execute(url, token).get();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         } else {
             String username = this.newConnectionFragment.getView().findViewById(R.id.editTextUsername).toString();
             String password = this.newConnectionFragment.getView().findViewById(R.id.editTextPassword).toString();
         }
 
+    }
+
+    private static class MyTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            Config config = new ConfigBuilder().withMasterUrl(objects[0].toString()).withOauthToken(objects[1].toString()).build();
+            KubernetesClient client = new DefaultKubernetesClient(config);
+            for (Pod pod : client.pods().inNamespace("myproject4").list().getItems()) {
+                System.out.println(pod.getMetadata().getName());
+            }
+            return new Object();
+        }
     }
 
 }
