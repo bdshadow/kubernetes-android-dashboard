@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    android:id="@+id/activityMainContent"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityMainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main"
-    tools:context=".MainActivity">
+    tools:showIn="@layout/fragment_connections_overview"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/addNewConnectionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="addKubernetesConnectionClick"
         android:text="Add Kubernetes connection"
         android:textAllCaps="false" />
 
-</android.support.constraint.ConstraintLayout>
+    <!--<android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="21345678"/>
+    </android.support.v7.widget.CardView>-->
+
+</LinearLayout>
