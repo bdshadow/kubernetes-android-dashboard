@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard;
+package org.bdshadow.kubernetes.android.dashboard;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("bdshadow.org.kubernetes.android.dashboard", appContext.getPackageName());
+        assertEquals("org.bdshadow.kubernetes.android.dashboard", appContext.getPackageName());
     }
 }

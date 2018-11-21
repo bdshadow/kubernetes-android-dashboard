@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard;
+package org.bdshadow.kubernetes.android.dashboard;
 
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;

@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard;
+package org.bdshadow.kubernetes.android.dashboard;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +15,9 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 
-import bdshadow.org.kubernetes.android.dashboard.utils.EncryptionUtils;
-import bdshadow.org.kubernetes.android.dashboard.utils.IOUtils;
-import bdshadow.org.kubernetes.android.dashboard.widget.ConnectionCardViewWrapper;
+import org.bdshadow.kubernetes.android.dashboard.utils.EncryptionUtils;
+import org.bdshadow.kubernetes.android.dashboard.utils.IOUtils;
+import org.bdshadow.kubernetes.android.dashboard.widget.ConnectionCardViewWrapper;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 

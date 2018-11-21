@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard;
+package org.bdshadow.kubernetes.android.dashboard;
 
 
 import android.app.AlertDialog;
@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutionException;
 
-import bdshadow.org.kubernetes.android.dashboard.exception.BrokenSecureStoreDataException;
-import bdshadow.org.kubernetes.android.dashboard.exception.SecureStoreNotSupportedException;
-import bdshadow.org.kubernetes.android.dashboard.utils.EncryptionUtils;
-import bdshadow.org.kubernetes.android.dashboard.utils.IOUtils;
+import org.bdshadow.kubernetes.android.dashboard.exception.BrokenSecureStoreDataException;
+import org.bdshadow.kubernetes.android.dashboard.exception.SecureStoreNotSupportedException;
+import org.bdshadow.kubernetes.android.dashboard.utils.EncryptionUtils;
+import org.bdshadow.kubernetes.android.dashboard.utils.IOUtils;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.utils.HttpClientUtils;

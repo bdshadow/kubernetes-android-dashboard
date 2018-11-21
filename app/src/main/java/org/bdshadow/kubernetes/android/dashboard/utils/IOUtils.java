@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard.utils;
+package org.bdshadow.kubernetes.android.dashboard.utils;
 
 import java.io.FileInputStream;
 import java.util.Scanner;

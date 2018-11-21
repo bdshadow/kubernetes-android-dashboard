@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard.utils;
+package org.bdshadow.kubernetes.android.dashboard.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,8 +31,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.security.auth.x500.X500Principal;
 
-import bdshadow.org.kubernetes.android.dashboard.exception.BrokenSecureStoreDataException;
-import bdshadow.org.kubernetes.android.dashboard.exception.SecureStoreNotSupportedException;
+import org.bdshadow.kubernetes.android.dashboard.exception.BrokenSecureStoreDataException;
+import org.bdshadow.kubernetes.android.dashboard.exception.SecureStoreNotSupportedException;
 
 // https://proandroiddev.com/security-best-practices-symmetric-encryption-with-aes-in-java-7616beaaade9
 // https://github.com/temyco/security-workshop-sample

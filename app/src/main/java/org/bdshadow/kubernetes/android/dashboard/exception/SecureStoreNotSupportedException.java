@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard.exception;
+package org.bdshadow.kubernetes.android.dashboard.exception;
 
 public class SecureStoreNotSupportedException extends Exception {
 

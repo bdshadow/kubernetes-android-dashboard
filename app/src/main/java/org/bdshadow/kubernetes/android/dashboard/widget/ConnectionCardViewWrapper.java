@@ -1,4 +1,4 @@
-package bdshadow.org.kubernetes.android.dashboard.widget;
+package org.bdshadow.kubernetes.android.dashboard.widget;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import bdshadow.org.kubernetes.android.dashboard.R;
-import bdshadow.org.kubernetes.android.dashboard.utils.Utils;
+import org.bdshadow.kubernetes.android.dashboard.R;
+import org.bdshadow.kubernetes.android.dashboard.utils.Utils;
 
 public class ConnectionCardViewWrapper {
     private CardView cardView;
