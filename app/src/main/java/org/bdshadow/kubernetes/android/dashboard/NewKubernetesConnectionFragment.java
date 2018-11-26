@@ -16,22 +16,19 @@ public class NewKubernetesConnectionFragment extends Fragment {
                                 Bundle savedInstanceState) {
         final View fragementView = inflater.inflate(R.layout.fragment_new_kubernetes_connection, container, false);
         RadioGroup radioGroupAuth = fragementView.findViewById(R.id.radioGroupAuthType);
-        radioGroupAuth.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radioOAuth) {
-                    fragementView.findViewById(R.id.layoutBasicAuth).setVisibility(View.GONE);
-                    fragementView.findViewById(R.id.layoutOAuth).setVisibility(View.VISIBLE);
-                    ConstraintLayout.LayoutParams
-                            layoutParams = (ConstraintLayout.LayoutParams)fragementView.findViewById(R.id.buttonConnect).getLayoutParams();
-                    layoutParams.topToBottom = R.id.layoutOAuth;
-                } else {
-                    fragementView.findViewById(R.id.layoutBasicAuth).setVisibility(View.VISIBLE);
-                    fragementView.findViewById(R.id.layoutOAuth).setVisibility(View.GONE);
-                    ConstraintLayout.LayoutParams
-                            layoutParams = (ConstraintLayout.LayoutParams)fragementView.findViewById(R.id.buttonConnect).getLayoutParams();
-                    layoutParams.topToBottom = R.id.layoutBasicAuth;
-                }
+        radioGroupAuth.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioOAuth) {
+                fragementView.findViewById(R.id.layoutBasicAuth).setVisibility(View.GONE);
+                fragementView.findViewById(R.id.layoutOAuth).setVisibility(View.VISIBLE);
+                ConstraintLayout.LayoutParams
+                        layoutParams = (ConstraintLayout.LayoutParams)fragementView.findViewById(R.id.buttonConnect).getLayoutParams();
+                layoutParams.topToBottom = R.id.layoutOAuth;
+            } else {
+                fragementView.findViewById(R.id.layoutBasicAuth).setVisibility(View.VISIBLE);
+                fragementView.findViewById(R.id.layoutOAuth).setVisibility(View.GONE);
+                ConstraintLayout.LayoutParams
+                        layoutParams = (ConstraintLayout.LayoutParams)fragementView.findViewById(R.id.buttonConnect).getLayoutParams();
+                layoutParams.topToBottom = R.id.layoutBasicAuth;
             }
         });
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);

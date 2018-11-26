@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private NewKubernetesConnectionFragment newConnectionFragment;
 
     public enum ConnectionResult {
@@ -153,12 +155,15 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (ExecutionException | InterruptedException e) {
             //TODO do smth more sensible here
+            Log.e(TAG, "Unexpected error", e);
             showTryAgainSnackBar("Unexpected error happened");
         } catch (BrokenSecureStoreDataException e) {
             //TODO add possibility to clear the KeyStore and save once again from scratch
+            Log.e(TAG, "secure storage data is broken", e);
             showOkAlert("Secure store was spoiled", "Please, try to delete and install the app again");
         } catch (SecureStoreNotSupportedException e) {
             //TODO save connection without credentials
+            Log.e(TAG, "secure storage is not supported", e);
             showOkAlert("Secure store is not supported", "The connection credentials can't be saved securely");
         }
     }
@@ -168,15 +173,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addConnection(Config config) throws SecureStoreNotSupportedException, BrokenSecureStoreDataException {
         if (exists(config)) {
-            //TODO overwrite connection
-            System.out.println("Connection already exists");
+            //TODO do you want to overwrite connection
+            Log.i(TAG, "Connection already exists");
         } else {
+            Log.i(TAG, "Adding new connection");
             JSONObject connectionsJson;
             try {
                 if (new File(getFilesDir(), getString(R.string.connections_file_key)).exists()) {
                     connectionsJson = new JSONObject(IOUtils.readFile(openFileInput(getString(R.string.connections_file_key))));
+                    Log.i(TAG, "Adding to already existing connections");
                 } else {
                     connectionsJson = new JSONObject();
+                    Log.i(TAG, "Persisting the first connection");
                 }
             } catch (FileNotFoundException e) {
                 connectionsJson = new JSONObject();
@@ -205,10 +213,11 @@ public class MainActivity extends AppCompatActivity {
                 connectionsJsonArray.put(connectionJson);
                 printWriter.print(connectionsJson.toString());
                 printWriter.flush();
+                Log.i(TAG, "Connection persisted");
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Connections file was not found", e);
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Couldn't parse connections json", e);
             }
         }
     }
@@ -222,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!config.getMasterUrl().equals(connectionJson.getString("url"))) {
                     continue;
                 }
+                Log.i(TAG, "Connection with the this url already exists");
                 if (config.getUsername() != null && config.getUsername().equals(connectionJson.getString("username"))) {
                     return true;
                 }
@@ -231,8 +241,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         } catch (FileNotFoundException e) {
+            Log.w(TAG, "Connections file was not found", e);
             return false;
         } catch (JSONException e) {
+            Log.w(TAG, "Couldn't parse connections json", e);
             return false;
         }
     }
@@ -242,15 +254,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected ConnectionResult doInBackground(Config... params) {
             try {
+                Log.i(TAG, "Trying to connect");
                 OkHttpClient okHttpClient = HttpClientUtils.createHttpClient(params[0]);
                 RequestBody emptyRequestBody = RequestBody.create(null, new byte[0]);
                 Request emptyRequest = new Request.Builder().url(params[0].getMasterUrl()).method("POST", emptyRequestBody).build();
                 Response response = okHttpClient.newCall(emptyRequest).execute();
                 if (response.code() == 401) {
+                    Log.w(TAG, "Authentication failed");
                     return ConnectionResult.FAILED_AUTH;
                 }
+                Log.i(TAG, "Successfully connected");
                 return ConnectionResult.SUCCESS;
             } catch (IOException e) {
+                Log.e(TAG, "Couldn't connect. Network problems", e);
                 return ConnectionResult.FAILED_NETWORK;
             }
         }

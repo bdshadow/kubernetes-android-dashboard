@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -38,6 +39,8 @@ import org.bdshadow.kubernetes.android.dashboard.exception.SecureStoreNotSupport
 // https://github.com/temyco/security-workshop-sample
 public class EncryptionUtils {
 
+    private static final String TAG = "EncryptionUtils";
+
     private static final String KEYSTORE = "AndroidKeyStore";
     private static final String ALIAS = "kubernetes-android-dashboard";
     private static final String X500_PRINCIPAL_NAME = "CN=kubernetes android dashboard, OU=open source, O=org.bdshadow";
@@ -56,6 +59,7 @@ public class EncryptionUtils {
      */
     public static String encryptString(String toEncrypt, Context context) throws SecureStoreNotSupportedException, BrokenSecureStoreDataException {
         if (toEncrypt == null) {
+            Log.w(TAG, "string to encrypt is null");
             return null;
         }
         SecretKey symmetricKey;
@@ -64,20 +68,25 @@ public class EncryptionUtils {
         try {
             Cipher cipherForWrapping = Cipher.getInstance(TRANSFORMATION_ASYMMETRIC);
             if (!sharedPreferences.contains(SHARED_PREFS_ASYM_KEY)) {
+                Log.i(TAG, "asymmetric key is not in shared prefs");
                 // Create AES BC provider key
                 symmetricKey = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES).generateKey();
                 // Create RSA AndroidKeyStore Provider key and save it into keystore
                 KeyPair masterKey = createKeys();
                 // Wrap AES Secret key with RSA Public key
                 cipherForWrapping.init(Cipher.WRAP_MODE, masterKey.getPublic());
+                Log.i(TAG, "wrapping symmetric key");
                 byte[] decodedData = cipherForWrapping.wrap(symmetricKey);
                 String encryptedSymmetricKey = Base64.encodeToString(decodedData, Base64.DEFAULT);
+                Log.i(TAG, "save asymmetric key to shared prefs");
                 sharedPreferences.edit().putString(SHARED_PREFS_ASYM_KEY, encryptedSymmetricKey).apply();
             } else {
+                Log.i(TAG, "asymmetric key already exists in shared prefs");
                 String encryptedSymmetricKey = sharedPreferences.getString(SHARED_PREFS_ASYM_KEY, "default");
                 byte[] encryptedSymmetricKeyData = Base64.decode(encryptedSymmetricKey, Base64.DEFAULT);
                 KeyPair masterKey = getSecretKey();
                 cipherForWrapping.init(Cipher.UNWRAP_MODE, masterKey.getPrivate());
+                Log.i(TAG, "unwrapping symmetric key");
                 symmetricKey = (SecretKey) cipherForWrapping.unwrap(
                         encryptedSymmetricKeyData, KeyProperties.KEY_ALGORITHM_AES, Cipher.SECRET_KEY);
             }
@@ -88,10 +97,13 @@ public class EncryptionUtils {
             String ivString = Base64.encodeToString(iv, Base64.DEFAULT);
 
             byte[] encryptedBytes = cipherForEncryption.doFinal(toEncrypt.getBytes());
+            Log.i(TAG, "final encoding");
             return ivString + IV_SEPARATOR + Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            Log.e(TAG, "Algorithm exceptions", e);
             throw new SecureStoreNotSupportedException(e);
         } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            Log.e(TAG, "Couldn't encode", e);
             throw new BrokenSecureStoreDataException(e);
         }
     }
@@ -112,22 +124,27 @@ public class EncryptionUtils {
                     SHARED_PREFS_FILE_NAME, Context.MODE_PRIVATE).getString(SHARED_PREFS_ASYM_KEY, "default");
             cipherForWrapping.init(Cipher.UNWRAP_MODE, keyPair.getPrivate());
             byte[] encryptionKeyData = Base64.decode(encryptionKey, Base64.DEFAULT);
+            Log.i(TAG, "Unwrapping the key while decoding");
             Key symmetricKey = cipherForWrapping.unwrap(encryptionKeyData, KeyProperties.KEY_ALGORITHM_AES, Cipher.SECRET_KEY);
 
             Cipher cipherForEncryption = Cipher.getInstance(TRANSFORMATION_SYMMETRIC);
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(Base64.decode(ivString, Base64.DEFAULT));
             cipherForEncryption.init(Cipher.DECRYPT_MODE, symmetricKey, ivSpec);
+            Log.i(TAG, "final decoding");
             byte[] encryptedData = cipherForEncryption.doFinal(Base64.decode(encodedString, Base64.DEFAULT));
             return new String(encryptedData);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            Log.e(TAG, "Algorithm exceptions", e);
             throw new SecureStoreNotSupportedException(e);
         } catch (InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            Log.e(TAG, "Unrecoverable key exception", e);
             throw new BrokenSecureStoreDataException(e);
         }
     }
 
     private static KeyPair getSecretKey() throws SecureStoreNotSupportedException, BrokenSecureStoreDataException {
         try {
+            Log.i(TAG, "get public and private keys");
             KeyStore ks = KeyStore.getInstance(KEYSTORE);
 
             // Weird artifact of Java API.  If you don't have an InputStream to load, you still need
@@ -141,8 +158,10 @@ public class EncryptionUtils {
             }
             throw new BrokenSecureStoreDataException();
         } catch (KeyStoreException | NoSuchAlgorithmException e) {
+            Log.e(TAG, "Algorithm exceptions", e);
             throw new SecureStoreNotSupportedException(e);
         } catch (UnrecoverableKeyException | CertificateException | IOException e) {
+            Log.e(TAG, "Unrecoverable key exception", e);
             throw new BrokenSecureStoreDataException(e);
         }
     }
@@ -153,6 +172,7 @@ public class EncryptionUtils {
      */
     private static KeyPair createKeys() throws SecureStoreNotSupportedException {
         try {
+            Log.i(TAG, "Create RSA AndroidKeyStore Provider key and save it into keystore");
             // The KeyPairGeneratorSpec object is how parameters for your key pair are passed
             // to the KeyPairGenerator.
             AlgorithmParameterSpec spec = new KeyGenParameterSpec.Builder(ALIAS, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
@@ -168,6 +188,7 @@ public class EncryptionUtils {
 
             return kpGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchProviderException e) {
+            Log.e(TAG, "Algorithm exceptions", e);
             throw new SecureStoreNotSupportedException(e);
         }
     }
