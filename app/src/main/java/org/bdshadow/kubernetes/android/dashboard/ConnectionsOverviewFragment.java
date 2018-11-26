@@ -24,10 +24,10 @@ public class ConnectionsOverviewFragment extends Fragment {
     private static final String TAG = "ConnectionsOverviewFgmt";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onResume() {
         getActivity().setTitle("Choose a connection");
         loadConnections();
-        super.onCreate(savedInstanceState);
+        super.onResume();
     }
 
     @Override
