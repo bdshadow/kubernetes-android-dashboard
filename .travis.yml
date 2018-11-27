@@ -11,10 +11,12 @@ android:
       - 'android-sdk-preview-license-.+'
       - 'android-sdk-license-.+'
       - 'google-gdk-license-.+'
+script:
+  - ./gradlew assemble # TODO run tests
 before_install:
   - yes | sdkmanager "platforms;android-27" # https://github.com/travis-ci/travis-ci/issues/8874
-before_script:
-  - echo no | android create avd --force -n test -t android-27 --abi x86
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+#before_script:
+#  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a # TODO update to android-23; there're problems at the moment https://github.com/googlemaps/android-maps-utils/issues/371#issuecomment-429197624
+#  - emulator -avd test -no-audio -no-window &
+#  - android-wait-for-emulator
+#  - adb shell input keyevent 82 &
