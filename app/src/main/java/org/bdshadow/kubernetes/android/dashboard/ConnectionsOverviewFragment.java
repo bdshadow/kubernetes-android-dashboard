@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.bdshadow.kubernetes.android.dashboard.utils.EncryptionUtils;
 import org.bdshadow.kubernetes.android.dashboard.utils.IOUtils;
@@ -45,6 +46,7 @@ public class ConnectionsOverviewFragment extends Fragment {
                 ConnectionCardViewWrapper cardViewWrapper = new ConnectionCardViewWrapper(getActivity());
                 JSONObject connectionJson = connectionsJsonArray.getJSONObject(i);
                 cardViewWrapper.fillWithJsonObject(connectionJson);
+                cardViewWrapper.addToLayout(getActivity().findViewById(R.id.existingConnectionsLayout));
                 cardViewWrapper.setOnClickListener(v -> {
                     ConfigBuilder configBuilder = new ConfigBuilder()
                             .withMasterUrl(connectionJson.optString("url"));

@@ -4,6 +4,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,9 +30,6 @@ public class ConnectionCardViewWrapper {
 //        layoutParams.setMarginEnd(Utils.dpToPx(16, context));
         cardView.setLayoutParams(layoutParams);
         cardView.setUseCompatPadding(true);
-
-        LinearLayout layout = context.findViewById(R.id.activityMainContent);
-        layout.addView(cardView);
     }
 
     public void fillWithJsonObject(JSONObject connectionJson) {
@@ -44,5 +42,9 @@ public class ConnectionCardViewWrapper {
 
     public void setOnClickListener(View.OnClickListener listener) {
         this.cardView.setOnClickListener(listener);
+    }
+
+    public void addToLayout(ViewGroup layout) {
+        layout.addView(this.cardView);
     }
 }
